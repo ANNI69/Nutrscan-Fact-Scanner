@@ -23,8 +23,9 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
   useEffect(() => {
     (async () => {
       if( videoRef!==null && videoRef.current!==null ){
-        if ( status && cameraAccess && typeof window !== 'undefined' ) {
-          if( isBarcodeDetectorAvailable() )
+        if ( status && typeof window !== 'undefined' ) {
+          await startStream();
+          if( cameraAccess && isBarcodeDetectorAvailable() )
             runBarcodeDetection();
         } else {
           stopStream();
@@ -36,63 +37,26 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
 
   const startStream = async () => {
     try {
-      console.log('Requesting camera access...');
-      
-      // Check if we're in a secure context (HTTPS or localhost)
-      if (!window.isSecureContext) {
-        alert('Camera access requires a secure context (HTTPS or localhost). Please access the site through HTTPS or localhost.');
-        return;
-      }
-
-      // For localhost, we'll try to get any available camera
       const stream: MediaStream = await navigator.mediaDevices.getUserMedia(
         {
           audio: false,
           video: {
-            facingMode: { ideal: 'environment' },
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
+            facingMode: 'environment',
+            height: frameRef.current?.offsetWidth || 300,
+            width: frameRef.current?.offsetHeight || 300
           }
         }
       );
-      
-      console.log('Camera access granted, setting up video...');
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream;
-        
-        // Wait for video to be ready
-        await new Promise((resolve) => {
-          if (videoRef.current) {
-            videoRef.current.onloadedmetadata = () => {
-              console.log('Video metadata loaded');
-              resolve(true);
-            };
-          }
-        });
-        
-        await videoRef.current.play();
-        console.log('Video playing');
+      if ( videoRef.current ) {
         setCameraAccess(true);
-      } else {
-        console.error('Video element not found');
-        setCameraAccess(false);
-      }
-    } catch (error: any) {
-      console.error('Error accessing camera:', error);
+        streamRef.current = stream;
+
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      };
+    } catch (error) {
       setCameraAccess(false);
-      
-      // More specific error messages based on the error type
-      if (error.name === 'NotAllowedError') {
-        alert('Camera access was denied. Please check your browser settings and make sure you\'re using HTTPS or localhost.');
-      } else if (error.name === 'NotFoundError') {
-        alert('No camera found. Please make sure your device has a camera and try again.');
-      } else if (error.name === 'NotReadableError') {
-        alert('Camera is in use by another application. Please close other apps that might be using the camera.');
-      } else {
-        alert('Failed to access camera. Please try again or check your browser settings.');
-      }
+      console.error('Error accessing camera:', error);
     }
   };
 
@@ -169,14 +133,8 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
       {!status && <FontAwesomeIcon icon={faClose} className='absolute top-0 right-0 m-4 text-2xl text-white cursor-pointer' onClick={()=>setStatus(true)} />}
       {!cameraAccess &&
         <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
-          <p className="mb-4">Camera access is not granted!</p>
-          <p className="mb-4">Please allow camera access to scan barcodes.</p>
-          <button 
-            onClick={startStream}
-            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
-          >
-            Grant Camera Permission
-          </button>
+          <p>Camera access is not granted!</p>
+          <p>Please allow camera access to scan barcodes.</p>
         </div>
       }
       {cameraAccess && !barcodeDetectorSupported &&
