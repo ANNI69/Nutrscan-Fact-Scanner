@@ -9,8 +9,8 @@ const fetchData = async (): Promise<Products[]> => {
 };
 
 export default async function ProductsList() {
-
   const products = await fetchData();
+  console.log('Fetched products:', products);
   
   return (
     <div className="flex flex-col gap-4">
