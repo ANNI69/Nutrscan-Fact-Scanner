@@ -14,7 +14,6 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
   const [status, setStatus] = useState(true);
   const [cameraAccess, setCameraAccess] = useState(false);
   const [barcodeDetectorSupported, setBarcodeDetectorSupported] = useState(true);
-  const [isCapturing, setIsCapturing] = useState(false);
 
   useEffect(() => {
     if( !isBarcodeDetectorAvailable() )
@@ -124,48 +123,6 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
     }, 1000);
   };
 
-  const captureAndSendImage = async () => {
-    if (!canvasRef.current || !videoRef.current) return;
-    
-    setIsCapturing(true);
-    try {
-      // Draw the current video frame to canvas
-      const ctx = canvasRef.current.getContext("2d");
-      if (!ctx) return;
-      
-      const { videoWidth, videoHeight } = videoRef.current;
-      canvasRef.current.width = videoWidth;
-      canvasRef.current.height = videoHeight;
-      ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight);
-
-      // Convert canvas to blob
-      const blob = await new Promise<Blob>((resolve) => {
-        canvasRef.current?.toBlob((blob) => {
-          if (blob) resolve(blob);
-        }, 'image/jpeg', 0.8);
-      });
-
-      // Create form data and send to server
-      const formData = new FormData();
-      formData.append('image', blob, 'capture.jpg');
-
-      const response = await fetch('http://127.0.0.1:5000/process-image', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send image');
-      }
-
-      const result = await response.json();
-      console.log('Image processed successfully:', result);
-    } catch (error) {
-      console.error('Error capturing and sending image:', error);
-    } finally {
-      setIsCapturing(false);
-    }
-  };
 
   return (
     <div ref={frameRef} className="relative w-full aspect-square border rounded-2xl my-4 overflow-hidden">
@@ -174,13 +131,6 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
       </video>
       <canvas id="myCanvas" ref={canvasRef} className="absolute top-0 left-0" width={200} height={300}></canvas>
       {!status && <FontAwesomeIcon icon={faClose} className='absolute top-0 right-0 m-4 text-2xl text-white cursor-pointer' onClick={()=>setStatus(true)} />}
-      <button 
-        onClick={captureAndSendImage}
-        disabled={isCapturing || !cameraAccess}
-        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isCapturing ? 'Capturing...' : 'Capture Image'}
-      </button>
       {!cameraAccess &&
         <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
           <p>Camera access is not granted!</p>
