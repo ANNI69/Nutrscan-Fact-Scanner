@@ -5,8 +5,9 @@ import { ProductNutrients, Products } from "@prisma/client";
 // export const metadata: Metadata = {
 //   title: 'Next.js',
 // }
+
 async function fetchData(barcode: string): Promise<{product: Products, nutrients: ProductNutrients[]}> {
-  const response = await fetch(`http://localhost:3000/api/endpoint`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/${barcode}`);
   return await response.json();
 }; 
 
