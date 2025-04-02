@@ -3,8 +3,9 @@ import { ProductCard } from "@/(app)/components";
 import Link from 'next/link';
 import { ProductSkeleton } from "@/(app)/components/skeleton";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Use env or fallback
 const fetchData = async (): Promise<Products[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL|| "http://localhost:3000"}/api/`, { next: { revalidate: 3600 } });
+  const response = await fetch(`${API_BASE_URL}/api/endpoint` , { next: { revalidate: 3600 } });
   return await response.json();
 };
 
