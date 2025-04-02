@@ -16,16 +16,16 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
   const [barcodeDetectorSupported, setBarcodeDetectorSupported] = useState(true);
 
   useEffect(() => {
-    if( !isBarcodeDetectorAvailable() )
+    if (!isBarcodeDetectorAvailable())
       setBarcodeDetectorSupported(false);
   }, [barcodeDetectorSupported]);
 
   useEffect(() => {
     (async () => {
-      if( videoRef!==null && videoRef.current!==null ){
-        if ( status && typeof window !== 'undefined' ) {
+      if (videoRef !== null && videoRef.current !== null) {
+        if (status && typeof window !== 'undefined') {
           await startStream();
-          if( cameraAccess && isBarcodeDetectorAvailable() )
+          if (cameraAccess && isBarcodeDetectorAvailable())
             runBarcodeDetection();
         } else {
           stopStream();
@@ -47,7 +47,7 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
           }
         }
       );
-      if ( videoRef.current ) {
+      if (videoRef.current) {
         setCameraAccess(true);
         streamRef.current = stream;
 
@@ -61,18 +61,18 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
   };
 
   const stopStream = () => {
-    if ( streamRef.current ) {
+    if (streamRef.current) {
       const tracks = streamRef.current.getTracks();
-      tracks.forEach( track => track.stop() );
+      tracks.forEach(track => track.stop());
     }
   }
 
   const runBarcodeDetection = () => {
 
-    if(canvasRef.current===null || videoRef.current===null) return;
+    if (canvasRef.current === null || videoRef.current === null) return;
 
     const ctx = canvasRef.current.getContext("2d");
-    if(ctx===null) return;
+    if (ctx === null) return;
     // set canvas width and height to match videoRef.current.videoWidth and videoRef.current.videoHeight
     const { videoWidth, videoHeight } = videoRef.current;
     canvasRef.current.width = videoWidth;
@@ -83,14 +83,14 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
     });
 
     // Barcode formats not supported
-    if ( !barcodeDetector ){
+    if (!barcodeDetector) {
       setBarcodeDetectorSupported(false);
       return;
     }
 
     const myInterval = setInterval(async () => {
 
-      await barcodeDetector.detect( videoRef.current ).then((barcodes: any) => {
+      await barcodeDetector.detect(videoRef.current).then((barcodes: any) => {
         if (barcodes.length === 0)
           return;
 
@@ -126,11 +126,11 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
 
   return (
     <div ref={frameRef} className="relative w-full aspect-square border rounded-2xl my-4 overflow-hidden">
-      <video className="w-full h-full" ref={videoRef} onLoadedMetadata={()=>setStatus(true)}>
+      <video className="w-full h-full" ref={videoRef} onLoadedMetadata={() => setStatus(true)}>
         Your browser does not support the video tag.
       </video>
       <canvas id="myCanvas" ref={canvasRef} className="absolute top-0 left-0" width={200} height={300}></canvas>
-      {!status && <FontAwesomeIcon icon={faClose} className='absolute top-0 right-0 m-4 text-2xl text-white cursor-pointer' onClick={()=>setStatus(true)} />}
+      {!status && <FontAwesomeIcon icon={faClose} className='absolute top-0 right-0 m-4 text-2xl text-white cursor-pointer' onClick={() => setStatus(true)} />}
       {!cameraAccess &&
         <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
           <p>Camera access is not granted!</p>
@@ -139,16 +139,13 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
       }
       {cameraAccess && !barcodeDetectorSupported &&
         <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
-          <p>
-            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API"><u>Barcode Detector API</u></a> is not supported by your <a href="https://caniuse.com/mdn-api_barcodedetector"><u>browsers</u></a>!
-          </p>
-          <p>Please open this page in your mobile browser (Chrome or Opera).</p>
+          Use a mobile browser to scan barcodes.
         </div>
       }
     </div>
   )
 }
 
-function isBarcodeDetectorAvailable(){
+function isBarcodeDetectorAvailable() {
   return (typeof window !== undefined && "BarcodeDetector" in window);
 };
