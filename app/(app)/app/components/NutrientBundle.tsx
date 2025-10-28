@@ -7,13 +7,29 @@ export default function NutrientBundle( {title, nutrients}: {title: string, nutr
   if( nutrients.length === 0 )
     return;
 
+  // Determine if this is negatives or positives
+  const isNegative = title.toLowerCase().includes('negative');
+  const icon = isNegative ? '⚠️' : '✅';
+  const accentColor = isNegative ? 'rgba(236, 74, 60, 0.1)' : 'rgba(73, 161, 96, 0.1)';
+
   return (
-    <>
-      <div className='flex justify-between items-center pt-6 pb-2'>
-        <h3 className='font-semibold text-lg text-primary'>{title}</h3>
-        <div className='font-light text-sm text-primary-3'>Per 100g</div>
+    <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--background-3)" }}>
+      {/* Header */}
+      <div 
+        className="px-5 py-4 flex justify-between items-center"
+        style={{ backgroundColor: accentColor }}
+      >
+        <h3 className="font-bold text-base flex items-center gap-2">
+          <span className="text-xl">{icon}</span>
+          {title}
+        </h3>
+        <div className="text-xs font-medium text-text-2 uppercase tracking-wider">
+          Per 100g
+        </div>
       </div>
-      <div>
+
+      {/* Nutrients List */}
+      <div className="bg-background">
         {nutrients.map((nutrient) => {
           if ( nutrient.nameKey === 'additives' )
             return <AdditivesBar key={nutrient.id} nutrient={nutrient} />;
@@ -21,6 +37,6 @@ export default function NutrientBundle( {title, nutrients}: {title: string, nutr
             return <NutrientBar key={nutrient.id} nutrient={nutrient} />;
         })}
       </div>
-    </>
+    </div>
   )
 }

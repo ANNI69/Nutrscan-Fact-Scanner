@@ -10,6 +10,7 @@ import SafeImage from "./SafeImage";
 import { useEffect, useState } from "react";
 import HealthierAlternatives from "./HealthierAlternatives";
 import NutrientBundle from "./NutrientBundle";
+import PreservativesAdditives from "./PreservativesAdditives";
 
 export default function ProductCard({
   product,
@@ -97,6 +98,13 @@ export default function ProductCard({
           </div>
         </div>
       </div>
+
+      {/* Preservatives & Additives Section */}
+      <PreservativesAdditives 
+        ingredients={product.ingredients} 
+        productName={product.name}
+      />
+
       {nutrients.length > 0 &&
         (product.rated < 70 ? (
           <>

@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^5.7.1",
     "@sec-ant/barcode-detector": "^1.3.3",
     "@zxing/browser": "^0.1.5",
