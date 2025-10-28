@@ -1,25 +1,31 @@
-import Scanner from './Scanner';
-import ProductCard from './ProductCard';
-import NutrientBar from './NutrientBar';
-import ProductsList from './ProductsList';
-import ProductsListLoading from './ProductsListLoading';
-import Welcome from './Welcome';
-import Search from './Search';
-import Stats from './Stats';
-import Header from './Header';
-import Back from './Back';
-import More from './More';
+import Back from "./Back";
+import Header from "./Header";
+import HealthierAlternatives from "./HealthierAlternatives";
+import HomeUpload from "./HomeUpload";
+import More from "./More";
+import NutrientBar from "./NutrientBar";
+import ProductCard from "./ProductCard";
+import ProductsList from "./ProductsList";
+import ProductsListLoading from "./ProductsListLoading";
+import Scanner from "./Scanner";
+import Search from "./Search";
+import Stats from "./Stats";
+import UploadBarcode from "./UploadBarcode";
+import Welcome from "./Welcome";
 
 export {
-  Scanner,
-  ProductCard,
+  Back,
+  Header,
+  HealthierAlternatives,
+  HomeUpload,
+  More,
   NutrientBar,
+  ProductCard,
   ProductsList,
   ProductsListLoading,
-  Welcome,
+  Scanner,
   Search,
   Stats,
-  Header,
-  Back,
-  More,
-}
+  UploadBarcode,
+  Welcome,
+};

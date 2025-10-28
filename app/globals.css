@@ -2,63 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
- * Color variants made using Realtime Colors:
- * https://www.realtimecolors.com/?colors=090a06-eef6f4-996024-b79f1a-134932&fonts=Poppins-Poppins
- */
+/* Clean light theme */
  :root {
-  --text: #000000;
-  --text-1: #111111;
-  --text-2: #272727;
-  --text-3: #3f3f3f;
-  
-  --background: #eef6f4;
-  --background-1: #deede9;
-  --background-2: #bcdcd4;
-  --background-3: #9bcabe;
-  
-  --primary: #996024;
-  --primary-1: #cf8230;
-  --primary-2: #d89b5a;
-  --primary-3: #e2b483;
-  
-  --secondary: #b79f1a;
-  --secondary-1: #dfc220;
-  --secondary-2: #e6cf4c;
-  --secondary-3: #ecdb79;
-  
-  --accent: #134932;
-  --accent-1: #1f7a53;
-  --accent-2: #2aa26e;
-  --accent-3: #34cb8a;
-}
-@media (prefers-color-scheme: dark) {
-:root {
-  --text: #ffffff;
-  --text-1: #cecece;
-  --text-2: #a0a0a0;
-  --text-3: #888888;
-  
-  --background: #080a0a;
-  --background-1: #0f1413;
-  --background-2: #141d1b;
-  --background-3: #22312d;
-  
-  --primary: #dba366;
-  --primary-1: #d89b5a;
-  --primary-2: #e2b483;
-  --primary-3: #eccdac;
-  
-  --secondary: #e5cd48;
-  --secondary-1: #dfc220;
-  --secondary-2: #e6cf4c;
-  --secondary-3: #ecdb79;
-  
-  --accent: #b6ecd5;
-  --accent-1: #aeead0;
-  --accent-2: #d6f5e8;
-  --accent-3: #ebfaf3;
-}
+  --text: #0f172a;         /* slate-900 */
+  --text-1: #334155;       /* slate-700 */
+  --text-2: #64748b;       /* slate-500 */
+  --text-3: #94a3b8;       /* slate-400 */
+
+  --background: #ffffff;   /* white */
+  --background-1: #f8fafc; /* slate-50 */
+  --background-2: #f1f5f9; /* slate-100 */
+  --background-3: #e2e8f0; /* slate-200 */
+
+  --primary: #2563eb;      /* blue-600 */
+  --primary-1: #3b82f6;    /* blue-500 */
+  --primary-2: #60a5fa;    /* blue-400 */
+  --primary-3: #93c5fd;    /* blue-300 */
+
+  --secondary: #0ea5e9;    /* sky-500 */
+  --secondary-1: #38bdf8;  /* sky-400 */
+  --secondary-2: #7dd3fc;  /* sky-300 */
+  --secondary-3: #bae6fd;  /* sky-200 */
+
+  --accent: #10b981;       /* emerald-500 */
+  --accent-1: #34d399;     /* emerald-400 */
+  --accent-2: #6ee7b7;     /* emerald-300 */
+  --accent-3: #a7f3d0;     /* emerald-200 */
 }
 
 /* Only style custom scrollbar for desktop */
@@ -85,4 +54,11 @@
 
 body {
   @apply text-text bg-background;
+}
+
+/* Glass panel utility */
+.glass-panel {
+  background-color: var(--background-1);
+  @apply border;
+  border-color: var(--background-3);
 }

@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { CloseIcon } from "./Icons";
 
 export default function Scanner({ handleResult }: { handleResult: (b: string) => void }) {
 
@@ -125,24 +124,26 @@ export default function Scanner({ handleResult }: { handleResult: (b: string) =>
 
 
   return (
-    <div ref={frameRef} className="relative w-full aspect-square border rounded-2xl my-4 overflow-hidden">
-      <video className="w-full h-full" ref={videoRef} onLoadedMetadata={()=>setStatus(true)}>
+    <div ref={frameRef} className="relative w-full aspect-square my-4 overflow-hidden border" style={{ borderColor: "var(--background-3)" }}>
+      <video className="w-full h-full object-cover" ref={videoRef} onLoadedMetadata={()=>setStatus(true)}>
         Your browser does not support the video tag.
       </video>
       <canvas id="myCanvas" ref={canvasRef} className="absolute top-0 left-0" width={200} height={300}></canvas>
-      {!status && <FontAwesomeIcon icon={faClose} className='absolute top-0 right-0 m-4 text-2xl text-white cursor-pointer' onClick={()=>setStatus(true)} />}
+      {!status && <button className='absolute top-0 right-0 m-3' onClick={()=>setStatus(true)} aria-label="Close">
+        <CloseIcon size={22} />
+      </button>}
       {!cameraAccess &&
-        <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
-          <p>Camera access is not granted!</p>
-          <p>Please allow camera access to scan barcodes.</p>
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center p-4 text-center" style={{ backgroundColor: "rgba(241,245,249,0.8)" }}>
+          <p className="text-xl text-primary">Camera access is not granted!</p>
+          <p className="text-text-1">Please allow camera access to scan barcodes.</p>
         </div>
       }
       {cameraAccess && !barcodeDetectorSupported &&
-        <div className="absolute top-0 left-0 w-full h-full bg-opacity-60 bg-black flex flex-col justify-center items-center p-3 text-center">
-          <p>
+        <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center p-4 text-center" style={{ backgroundColor: "rgba(241,245,249,0.8)" }}>
+          <p className="text-primary">
             <a href="https://developer.mozilla.org/en-US/docs/Web/API/Barcode_Detection_API"><u>Barcode Detector API</u></a> is not supported by your <a href="https://caniuse.com/mdn-api_barcodedetector"><u>browsers</u></a>!
           </p>
-          <p>Please open this page in your mobile browser (Chrome or Opera).</p>
+          <p className="text-text-1">Please open this page in your mobile browser (Chrome or Opera).</p>
         </div>
       }
     </div>

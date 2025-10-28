@@ -4,29 +4,19 @@ export async function GET(
   request: Request
 ) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL( request.url );
+    // const searchParams = request.nextUrl.searchParams
     const page = searchParams.get('page') || '1';
     const limit = searchParams.get('limit') || '10';
 
-    const result = await getProducts(parseInt(page), parseInt(limit));
+    const result = await getProducts( parseInt( page ), parseInt( limit ) );
 
-    if (!result) {
-      return Response.json([], {
-        status: 200,
-        headers: { 'content-type': 'application/json' }
-      });
-    }
-
-    return Response.json(result, {
-      status: 200,
-      headers: { 'content-type': 'application/json' }
-    });
+    return Response.json( result || [] );
 
   } catch (error) {
-    console.error('API Error:', error);
-    return Response.json({ error: 'Internal Server Error' }, {
+    return new Response( JSON.stringify( {error} ), {
       status: 500,
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
     });
   }
 }

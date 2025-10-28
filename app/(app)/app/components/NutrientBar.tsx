@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { ProteinIcon, SugarIcon, SodiumIcon, FatIcon, FiberIcon, CalorieIcon } from './NutrientIcons'
 import { rateIndexColors } from '@/constants'
 import { limitDecimalPlaces, getBarUIDetails, getRateByIndex, getMetric } from '@/utils'
 import { ProductNutrients } from '@prisma/client';
@@ -37,12 +38,13 @@ export default function NutrientBar({nutrient}: {nutrient: ProductNutrients}) {
 
   return (
     <div onClick={handleClick} className="flex flex-row gap-4 border-b border-background-3 last:border-b-0 py-4 cursor-pointer">
-      <div>
-      <Image
-        src={ metric.img }
-        alt={ metric.name }
-        className='w-6 pt-2'
-        width="32" height="32" />
+      <div className='w-6 pt-1'>
+        {metric.name === 'Protein' && <ProteinIcon />}
+        {metric.name === 'Sugar' && <SugarIcon />}
+        {metric.name === 'Sodium' && <SodiumIcon />}
+        {metric.name === 'Saturated fat' && <FatIcon />}
+        {metric.name === 'Fiber' && <FiberIcon />}
+        {metric.name === 'Calories' && <CalorieIcon />}
       </div>
       <div className="flex flex-col gap-2 grow">
         <div className="flex flex-row justify-between">

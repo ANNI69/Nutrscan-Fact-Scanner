@@ -18,6 +18,11 @@ model Users {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   products        Products[]
+  histories       ScanHistory[]
+  dietPlans       DietPlan[]
+  pantryItems     PantryItem[]
+  shoppingItems   ShoppingItem[]
+  favorites       Favorite[]
 }
 
 model Products {
@@ -38,6 +43,7 @@ model Products {
   nutrients       ProductNutrients[]
   userID          String?      @db.ObjectId
   user            Users?       @relation(fields: [userID], references: [id])
+  scanHistories   ScanHistory[]
 }
 
 model ProductNutrients {
@@ -48,4 +54,71 @@ model ProductNutrients {
   rated           Int
   productID       String      @db.ObjectId
   product         Products    @relation(fields: [productID], references: [id])
+}
+
+model ScanHistory {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  userID     String    @db.ObjectId
+  user       Users     @relation(fields: [userID], references: [id])
+  productID  String    @db.ObjectId
+  product    Products  @relation(fields: [productID], references: [id])
+  createdAt  DateTime  @default(now())
+}
+
+model DietPlan {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  userID         String     @db.ObjectId
+  user           Users      @relation(fields: [userID], references: [id])
+  title          String
+  date           DateTime?
+  caloriesTarget Int        @default(2000)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  meals          DietMeal[]
+}
+
+model DietMeal {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  planID    String   @db.ObjectId
+  plan      DietPlan @relation(fields: [planID], references: [id])
+  name      String
+  calories  Int      @default(0)
+  protein   Int      @default(0)
+  carbs     Int      @default(0)
+  fat       Int      @default(0)
+}
+
+model PantryItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userID    String   @db.ObjectId
+  user      Users    @relation(fields: [userID], references: [id])
+  name      String
+  barcode   String?
+  quantity  Int      @default(1)
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShoppingItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userID    String   @db.ObjectId
+  user      Users    @relation(fields: [userID], references: [id])
+  name      String
+  barcode   String?
+  quantity  Int      @default(1)
+  checked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Favorite {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userID    String   @db.ObjectId
+  user      Users    @relation(fields: [userID], references: [id])
+  name      String
+  barcode   String?
+  image     String?
+  brand     String?
+  createdAt DateTime @default(now())
 }
