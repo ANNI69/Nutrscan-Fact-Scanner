@@ -48,46 +48,92 @@ export default function AdditivesBar({nutrient}: {nutrient: ProductNutrients}) {
   const additivesDetail: AdditiveProps[] = getAdditivesDetails(additives);
 
   return (
-    <div onClick={handleClick} className="flex flex-row gap-4 border-b border-background-3 last:border-b-0 py-4 cursor-pointer">
-      <div>
-      <Image
-        src='/additives.png' alt='Additives'
-        className='w-6 pt-2'
-        width="32" height="32" />
-      </div>
-      <div className="flex-1 flex flex-col gap-2">
-        <div className="flex flex-row justify-between">
-          <div className='flex flex-col'>
-            <p className="text-sm">{additiveCount ? 'Additives' : 'No additives'}</p>
-            <p className="text-xs font-light text-text-2">{ui.message}</p>
-          </div>
-          <div className='flex items-center gap-2 text-xs'>
-            <p>{additiveCount ? additiveCount : '✔'}</p>
-            <div style={{
-                backgroundColor: `${ui.color}`
-              }} className='rounded-2xl w-4 h-4'></div>
-            <Back className='barIcon -rotate-90 text-text-3' />
-          </div>
+    <div 
+      onClick={handleClick} 
+      className="px-5 py-4 cursor-pointer hover:bg-background-2 transition-colors border-b border-background-3 last:border-b-0"
+    >
+      <div className="flex items-start gap-4">
+        {/* Icon */}
+        <div className='w-10 h-10 flex items-center justify-center rounded-lg' style={{ backgroundColor: "var(--background-2)" }}>
+          <Image
+            src='/additives.png' 
+            alt='Additives'
+            className='w-6 h-6'
+            width="24" 
+            height="24" 
+          />
         </div>
-        <div className='barChart h-0 -mx-2 px-2 overflow-hidden transition-[height] ease-in-out delay-50'>
-          <div className='flex flex-col gap-1'>
-            {additivesDetail.map((info, index) => (
-              <div key={index} className='flex gap-2 items-center text-sm'>
-                <div style={{
-                  backgroundColor: `${info.color}`
-                }} className='rounded-2xl w-4 h-4'></div>
-                {info.number}: {info.riskTitle}
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Header Row */}
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <div className='flex-1 min-w-0'>
+              <h4 className="font-semibold text-sm mb-0.5">
+                {additiveCount ? 'Additives' : 'No additives'}
+              </h4>
+              <p className="text-xs text-text-2">{ui.message}</p>
+            </div>
+            
+            {/* Count and Rating Badge */}
+            <div className='flex items-center gap-3 flex-shrink-0'>
+              <div className="text-right">
+                <div className="font-bold text-sm">
+                  {additiveCount ? additiveCount : '✔'}
+                </div>
+                {additiveCount > 0 && (
+                  <div className="text-xs text-text-2">found</div>
+                )}
               </div>
-            ))}
-            {additivesDetail.length>0 &&
-            <>
-              <button onClick={handleShowDetail} className='text-secondary hover:underline text-sm'>{!showDetail ? `Show more info` : `Show less`}</button>
-              {showDetail && (
-                <Suspense fallback={<AdditivesSkeleton />}>
-                  <AdditivesDetail additives={additives} />
-                </Suspense>
+              <div 
+                style={{ backgroundColor: ui.color }} 
+                className='rounded-full w-6 h-6 shadow-sm'
+              ></div>
+              <Back className='barIcon -rotate-90 text-text-2 transition-transform' />
+            </div>
+          </div>
+
+          {/* Expandable Details */}
+          <div className='barChart h-0 overflow-hidden transition-all duration-300 ease-in-out'>
+            <div className="pt-4 space-y-3">
+              {/* Additives List */}
+              {additivesDetail.map((info, index) => (
+                <div 
+                  key={index} 
+                  className='flex items-center gap-3 p-3 rounded-lg'
+                  style={{ backgroundColor: "var(--background-2)" }}
+                >
+                  <div 
+                    style={{ backgroundColor: info.color }} 
+                    className='rounded-full w-5 h-5 flex-shrink-0 shadow-sm'
+                  ></div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-sm">{info.number}</div>
+                    <div className="text-xs text-text-2">{info.riskTitle}</div>
+                  </div>
+                </div>
+              ))}
+              
+              {/* Show More Button */}
+              {additivesDetail.length > 0 && (
+                <div className="pt-2">
+                  <button 
+                    onClick={handleShowDetail} 
+                    className='text-primary hover:underline text-sm font-medium transition-colors'
+                  >
+                    {!showDetail ? '📋 Show detailed information' : '✕ Hide details'}
+                  </button>
+                  
+                  {showDetail && (
+                    <div className="mt-3">
+                      <Suspense fallback={<AdditivesSkeleton />}>
+                        <AdditivesDetail additives={additives} />
+                      </Suspense>
+                    </div>
+                  )}
+                </div>
               )}
-            </>}
+            </div>
           </div>
         </div>
       </div>
